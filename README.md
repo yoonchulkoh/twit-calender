@@ -5,7 +5,7 @@ ChatGPT APIを使ってメッセージ内容から予定登録に必要な情報
 
 # 使い方
 
-## Required
+## Requirements
 * Twitter API
 * ChatGPT API
 * Cloudflare Workers
