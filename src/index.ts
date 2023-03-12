@@ -63,11 +63,15 @@ const parseEventInfoFromText = async (
     },
   });
   const openai = new OpenAIApi(configuration);
-
+  const now = new Date();
   const chatgpt_spell = `
-  下tweetを、下記パラメータに構造化して、JSONを返してください。
+  Twitterを元に、イベントをGoogleカレンダーに登録するアプリを作っています。
+  下記tweetを、下記フォーマットに構造化して、JSONを返してください。
   回答はJSONデータのみ返してください。
   
+  ## 今日の日付
+  ${now}
+
   ## tweet
   ${text}
 
@@ -79,7 +83,7 @@ const parseEventInfoFromText = async (
   text: 予定のタイトル(件名)（15文字程度）
   details: tweet本文を入れてください。最終行に1行空けて、tweet URLを追加してください。
   location: 場所（15文字程度）。
-  dates: 開始日時と終了日時。日時形式=20210401T093000Z/20210401T100000Z
+  dates: 開始日時と終了日時。年が無い場合は今日の日付を元に、一番近い未来の日時にしてください。日時形式=20210401T093000Z/20210401T100000Z
   sprop: URL。複数指定する場合は「sprop=〇〇&sprop=△△」
   `;
 
