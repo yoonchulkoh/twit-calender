@@ -2,6 +2,8 @@ import { Client } from "twitter-api-sdk";
 import { Configuration, OpenAIApi } from "openai";
 import fetchAdapter from "@vespaiach/axios-fetch-adapter";
 import * as querystring from "querystring";
+import url from "url";
+import path from "path";
 
 export interface Env {
   TWITTER_BEARER_TOKEN: string;
@@ -22,9 +24,7 @@ export default {
       if (tweetUrl === null) {
         return new Response("error: tweetUrl required.");
       }
-      const url = require("url");
-      const path = require("path");
-      const tweetId = path.basename(url.parse(tweetUrl).pathname);
+      const tweetId = path.basename(url.parse(tweetUrl).pathname ?? "");
       const text = await getTweetTextById(env, tweetId);
       console.log("text: " + text);
 
@@ -49,30 +49,6 @@ const getTweetTextById = async (env: Env, id: string) => {
   return tweet.data?.text ?? "";
 };
 
-const CHATGPT_SPELL = `
-対象のテキストを下記パラメータに構造化したJSONにしてください。
-
-# パラメーター構造化ルール
-
-## パラメーター
-| パラメーター | 必須 | 説明 |
-| --- | --- | --- |
-| action | 必須 | 『TEMPLATE』を設定します。 |
-| text | 必須 | 予定のタイトル(件名)を指定します。予定のタイトルなので15文字程度で。省略した場合は元のタイトルをdetailsに入れてください。 |
-| details | 任意 | 予定の詳細を指定します。textやlocationで省略したようなものは、ここに元情報として入れてください。最後に改行して、オリジナルツイートURLも含めてください。 |
-| location | 任意 | 場所の設定です。Googleカレンダーの位置情報に利用するので、Google Mapで出てくる明確な内容が良いです。ふわっとした指定はここには入れない方がベターです。詳細な場所まで記述がある場合はdetailsに元データとして書いてください |
-| dates | 任意 | 予定の開始日時と終了日時を指定します。 |
-| trp | 任意 | 外部公開設定(true または false)をしていしますが、うまく動作しないので false で無難に設定するのが良いかと思います。 |
-| sprop | 任意 | 予定にURLを設定できます。複数指定する場合、sprop=〇〇&sprop=△△ のように指定する。URLにスペースは入りません。 |
-
-## 日付フォーマット
-例	2021年4月1日 9時30分0秒 〜 2021年4月1日 10時0分0秒
-記述方法	20210401T093000Z/20210401T100000Z
-
-# 対象のテキスト
-
-`;
-
 // chatGPT APIを使って、テキストからイベント情報を構造化してJSONで取得する
 const parseEventInfoFromText = async (
   env: Env,
@@ -87,8 +63,27 @@ const parseEventInfoFromText = async (
     },
   });
   const openai = new OpenAIApi(configuration);
-  const inputContent =
-    CHATGPT_SPELL + text + "\n\n# オリジナルツイートURL\n" + tweetUrl;
+
+  const chatgpt_spell = `
+  下tweetを、下記パラメータに構造化して、JSONを返してください。
+  回答はJSONデータのみ返してください。
+  
+  ## tweet
+  ${text}
+
+  ## tweet URL
+  ${tweetUrl}
+  
+  ## フォーマット
+  action: "TEMPLATE"（固定）
+  text: 予定のタイトル(件名)（15文字程度）
+  details: tweet本文を入れてください。最終行に1行空けて、tweet URLを追加してください。
+  location: 場所（15文字程度）。
+  dates: 開始日時と終了日時。日時形式=20210401T093000Z/20210401T100000Z
+  sprop: URL。複数指定する場合は「sprop=〇〇&sprop=△△」
+  `;
+
+  const inputContent = chatgpt_spell;
   console.log("content: " + inputContent);
   const result = await openai.createChatCompletion({
     model: "gpt-3.5-turbo",
