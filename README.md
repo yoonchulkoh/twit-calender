@@ -3,6 +3,8 @@
 iPhoneのTwitterアプリで見つけたイベントを、Googleカレンダーに予定登録するツール。
 ChatGPT APIを使ってメッセージ内容から予定登録に必要な情報をparseしています。
 
+https://user-images.githubusercontent.com/420161/224550353-9ae9d7d8-8582-4026-aeeb-8ca036fe933f.MOV
+
 # 使い方
 
 ## Requirements
