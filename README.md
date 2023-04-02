@@ -5,6 +5,11 @@ ChatGPT APIを使ってメッセージ内容から予定登録に必要な情報
 
 https://user-images.githubusercontent.com/420161/224550353-9ae9d7d8-8582-4026-aeeb-8ca036fe933f.MOV
 
+
+なぜ作ろうと思ったかなど、noteに書いています。  
+https://note.com/yoonchulkoh/n/n099231ac9b1c
+
+
 # 使い方
 
 ## Requirements
