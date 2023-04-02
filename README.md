@@ -3,6 +3,8 @@
 iPhoneのTwitterアプリで見つけたイベントを、Googleカレンダーに予定登録するツール。
 ChatGPT APIを使ってメッセージ内容から予定登録に必要な情報をparseしています。
 
+https://user-images.githubusercontent.com/420161/224550353-9ae9d7d8-8582-4026-aeeb-8ca036fe933f.MOV
+
 # 使い方
 
 ## Requirements
@@ -12,16 +14,12 @@ ChatGPT APIを使ってメッセージ内容から予定登録に必要な情報
 * Googleカレンダー
 * iPhoneのショートカットアプリ
 
-## Cloudflare Workersセットアップ
+## Cloudflareにデプロイ
 
 CLIツールのwranglerをインストール
 ```
 yarn add wrangler
 ```
-
-TODO: セットアップ
-
-## Cloudflareにデプロイ
 
 環境変数を設定。コマンドを打つと、値を入力するプロンプトが出るので、1行ずつ入力してください。
 ```
@@ -43,7 +41,7 @@ wrangler dev
 ## iPhoneショートカットの設定
 この通りに設定して、テキストのURL部分だけデプロイしたものに差し替えてください。
 
-TODO: 画像貼る
+<img width="300px" src="https://user-images.githubusercontent.com/420161/224551257-883e7b65-e3fa-40a5-ab24-e9b5805670e7.PNG">
 
 `共有シートに表示` をONにする。これで共有のメニューに登録したショートカットが表示されるようになります。
 
